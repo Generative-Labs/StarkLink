@@ -1,8 +1,8 @@
-import React, { FunctionComponent, useState } from 'react';
-import { AppTypeEnum, LoginModal } from '@web3mq/react-components';
-import styled from 'styled-components';
+import React, { FunctionComponent, useEffect, useState } from 'react';
+import { AppTypeEnum, LoginModal, Button } from '@web3mq/react-components';
 import useLogin from '../hooks/useLogin';
 import '@web3mq/react-components/dist/css/index.css';
+import { AddContactIcon } from './icons/AddContactIcon';
 
 export type FollowButtonProps = {
   username?: string;
@@ -17,6 +17,11 @@ const FollowButton: FunctionComponent<FollowButtonProps> = ({}: FollowButtonProp
   // @ts-ignore
   const [appType, setAppType] = useState(window.innerWidth <= 600 ? AppTypeEnum['h5'] : AppTypeEnum['pc']);
   const { keys, init, getAccount, handleLoginEvent } = useLogin();
+
+  useEffect(() => {
+    // set component theme
+    document.getElementsByTagName('body')[0].setAttribute('data-theme', 'light');
+  }, []);
 
   if (!keys) {
     let mainKeys: any = null;
@@ -50,7 +55,9 @@ const FollowButton: FunctionComponent<FollowButtonProps> = ({}: FollowButtonProp
 
   return (
     <>
-      <ButtonStyled onClick={() => followUser()}>Follow</ButtonStyled>
+      <Button icon={<AddContactIcon />} onClick={() => followUser()}>
+        Follow
+      </Button>
       {isRegistering && (
         <LoginModal
           containerId={appType}
@@ -65,5 +72,3 @@ const FollowButton: FunctionComponent<FollowButtonProps> = ({}: FollowButtonProp
 };
 
 export default FollowButton;
-
-export const ButtonStyled = styled.button``;
