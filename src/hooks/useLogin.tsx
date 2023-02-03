@@ -15,13 +15,17 @@ const useLogin = () => {
   const [fastestUrl, setFastUrl] = useState<string | null>(null);
 
   const init = async () => {
-    const bestEndpointUrl = await Client.init({
-      connectUrl: '', //
-      app_key: process.env.API_KEY, // temporary authorization key obtained by applying, will be removed in future testnets and mainnet
+    const tempPubkey = localStorage.getItem('PUBLIC_KEY') || '';
+    const didKey = localStorage.getItem('DID_KEY') || '';
+    const fastUrl = await Client.init({
+      connectUrl: localStorage.getItem('FAST_URL'),
+      app_key: 'vAUJTFXbBZRkEDRE',
+      env: 'dev',
+      didKey,
+      tempPubkey,
     });
-
-    localStorage.setItem('FAST_URL', bestEndpointUrl);
-    setFastUrl(bestEndpointUrl);
+    localStorage.setItem('FAST_URL', fastUrl);
+    setFastUrl(fastUrl);
   };
 
   const getAccount = async () => {
