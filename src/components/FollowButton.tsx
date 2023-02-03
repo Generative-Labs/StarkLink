@@ -3,9 +3,13 @@ import { AppTypeEnum, LoginModal, Button, Loading, Modal } from '@web3mq/react-c
 import useLogin from '../hooks/useLogin';
 import '@web3mq/react-components/dist/css/index.css';
 import { AddContactIcon } from './icons/AddContactIcon';
+import { SuccessIcon } from './icons/SuccessIcon';
+import { SkeletonIcon } from './icons/SkeletonIcon';
 import { UserAccountType } from '@web3mq/react-components/dist/components/LoginModal/hooks/useLogin';
 import { Client, getUserPublicProfileRequest } from '@web3mq/client';
-
+import './FollowButton.css';
+import { RightIcon } from './icons/RightIcon';
+import Right from './Right.jpg';
 export type FollowButtonProps = {
   username?: string;
   userid?: string;
@@ -13,7 +17,10 @@ export type FollowButtonProps = {
   address: string;
   walletType: string;
 };
-
+const getShortAddress = (address = '', num = 5, endNum = 4) => {
+  const strLength = address.length;
+  return address.substring(0, num) + '...' + address.substring(strLength - endNum, strLength);
+};
 const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
   const { address, walletType } = props;
   const [isLoading, setIsLoading] = useState(false);
@@ -102,7 +109,13 @@ const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
           {isLoading ? (
             <Loading />
           ) : (
-            <Button icon={<AddContactIcon />} onClick={() => followUser()}>Follow</Button>
+            <Button
+              icon={<AddContactIcon />}
+              disabled={account && account.is_my_following}
+              onClick={() => followUser()}
+            >
+              {account && account.is_my_following ? 'following' : 'follow'}
+            </Button>
           )}
         </>
       )}
@@ -113,7 +126,19 @@ const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
           setShowModal(false);
         }}
       >
-        <div></div>
+        <div className='successContainer'>
+          <SuccessIcon className='successIcon' />
+          <div className='successWrap'>
+            <img src={Right} alt='' />
+            <div className='successUserInfo'>
+              <div className='followContent'>Follow {account && getShortAddress(account.userid)}</div>
+              <div className='pendContent'>Pending To: {account && getShortAddress(account.wallet_address)}</div>
+            </div>
+          </div>
+          <SkeletonIcon className='skeletonIcon' />
+          <SkeletonIcon className='skeletonIcon' />
+          <SkeletonIcon className='skeletonIcon' />
+        </div>
       </Modal>
     </>
   );

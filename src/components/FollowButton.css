@@ -1,0 +1,38 @@
+.successContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+}
+.successIcon {
+
+}
+.successWrap {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: 16px;
+}
+.successUserInfo {
+
+}
+.successUserInfo .followContent {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 22px;
+  text-align: center;
+  color: #1AC057;
+}
+.successUserInfo .pendContent {
+  font-family: 'Inter', sans-serif;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #71717A;
+}
+.skeletonIcon {
+  padding: 8px 0;
+}
