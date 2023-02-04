@@ -1,9 +1,11 @@
 import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
-import { AppTypeEnum, LoginModal, Button, Modal, Loading } from '@web3mq/react-components';
+import { AppTypeEnum, LoginModal, Button, Modal, Loading, Popover } from '@web3mq/react-components';
+import cx from 'classnames';
 import useLogin from '../../hooks/useLogin';
 import '@web3mq/react-components/dist/css/index.css';
 import { AddContactIcon } from '../../icons/AddContactIcon';
 import { getUserPublicProfileRequest, WalletType } from '@web3mq/client';
+import { ErrorIcon } from '../../icons/ErrorIcon';
 import { SuccessIcon } from '../../icons/SuccessIcon';
 import { RightIcon } from '../../icons/RightIcon';
 import { SkeletonIcon } from '../../icons/SkeletonIcon';
@@ -34,43 +36,9 @@ export const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
   const [readyStep, setReadyStep] = useState<ReadyStepType>();
   const [targetUserAccount, setTargetUserAccount] = useState<any>();
   const [modalType, setModalType] = useState<ModalType>();
-
+  const [isBtnLoad, setIsBtnLoad] = useState<boolean>(false);
   const handleAppType = () => {
     setAppType(window.innerWidth <= 600 ? AppTypeEnum['h5'] : AppTypeEnum['pc']);
-  };
-
-  const styles = {
-    successContainer: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      padding: '24px',
-    },
-    successWrap: {
-      display: 'flex',
-      alignItems: 'center',
-      width: '100%',
-      marginTop: '16px',
-    },
-    followContent: {
-      fontFamily: '\'Inter\', sans-serif',
-      fontWeight: '600',
-      fontSize: '18px',
-      lineHeight: '22px',
-      textAlign: 'center',
-      color: '#1AC057',
-    },
-    pendContent: {
-      fontFamily: '\'Inter\', sans-serif',
-      fontStyle: 'normal',
-      fontWeight: '400',
-      fontSize: '14px',
-      lineHeight: '20px',
-      color: '#71717A',
-    },
-    skeletonIcon: {
-      padding: '8px 0',
-    },
   };
 
   useEffect(() => {
@@ -81,18 +49,17 @@ export const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
   }, []);
 
   const followUser = async () => {
-    console.log(targetUserAccount, 'targetUserAccount');
+    setIsBtnLoad(true);
     if (targetUserAccount && targetUserAccount.is_my_following) {
       setModalType('success');
+      setIsBtnLoad(false);
       return;
     }
     setReadyStep('follow');
     if (!Client.register) {
-      console.log('init  init ');
       await init();
     }
     if (!keys) {
-      console.log('go to login');
       // go to login
       const userAccount = await getAccount();
       setAccount({
@@ -114,8 +81,8 @@ export const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
     }
     // follow
     if (!userInfo.userExist) {
-      console.log('user not register');
       setErrorInfo('user not register');
+      setIsBtnLoad(false);
       setModalType('error');
     } else {
       setModalType('loading');
@@ -124,16 +91,20 @@ export const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
         resolve(client);
       }).then(async function (client: any) {
         const myProfile = await client.user.getMyProfile();
-        console.log(myProfile, 'myProfile');
         //todo follow func
-        const followRes = await client.contact.followOperation({
-          target_userid: userInfo.userid,
-          address: myProfile.wallet_address,
-          action: 'follow',
-          did_type: myProfile.wallet_type as WalletType,
-        });
-        console.log(followRes, 'followRes');
-        setModalType('success');
+        try {
+          const followRes = await client.contact.followOperation({
+            target_userid: userInfo.userid,
+            address: myProfile.wallet_address,
+            action: 'follow',
+            did_type: myProfile.wallet_type as WalletType,
+          });
+          setIsBtnLoad(false);
+          setModalType('success');
+        } catch (error) {
+          setIsBtnLoad(false);
+          setModalType(undefined);
+        }
       });
     }
   };
@@ -159,7 +130,6 @@ export const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
     if (keys) {
       if (!targetUserAccount) {
         const userInfo = await getUserInfo(targetWalletType, targetWalletAddress.toLowerCase());
-        console.log(userInfo, 'userInfo');
         setTargetUserAccount(userInfo);
       }
       if (readyStep === 'follow') {
@@ -171,55 +141,50 @@ export const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
   const RenderFollowSuccess = useCallback(() => {
     return (
       <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          padding: '24px',
-        }}
+        className={ss.successContainer}
       >
         <SuccessIcon />
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            width: '100%',
-            marginTop: '16px',
-          }}
-        >
+        <div className={ss.sucesstitle}>Follow Successfully</div>
+        <div className={ss.successWrap}>
           <RightIcon />
           <div style={{ marginLeft: '16px' }}>
-            <div
-              style={{
-                fontFamily: '\'Inter\', sans-serif',
-                fontWeight: '600',
-                fontSize: '18px',
-                lineHeight: '22px',
-                textAlign: 'center',
-                color: '#1AC057',
-              }}
-            >
+            <Popover className={ss.followContent} content={targetWalletAddress}>
               Follow {getShortAddress(targetWalletAddress)}
-            </div>
+            </Popover>
             <div className={ss.pendContent}>
               Pending To: {keys && getShortAddress(keys.address)}
             </div>
           </div>
         </div>
-        <SkeletonIcon style={styles.skeletonIcon} />
-        <SkeletonIcon style={styles.skeletonIcon} />
-        <SkeletonIcon style={styles.skeletonIcon} />
+        {/* <SkeletonIcon className={ss.skeletonIcon} />
+        <SkeletonIcon className={ss.skeletonIcon} />
+        <SkeletonIcon className={ss.skeletonIcon} /> */}
       </div>
     );
   }, []);
 
   const RenderErrorInfo = useCallback(() => {
     return (
-      <div>
-        <div>{errorInfo}</div>
+      <div className={ss.errorContainer}>
+        <ErrorIcon className={ss.errorIcon} />
+        {/* <div className={ss.errorTitle}>Follow Failed</div> */}
+        <div className={ss.errorTitle}>{errorInfo}</div>
+        <div className={ss.errorTip}>
+          Share the link to your invited users. &nbsp;
+          <a href='https://web3-mq-react-example.pages.dev/' target='_blank'>Invite Now &gt;</a>
+        </div>
       </div>
     );
   }, [errorInfo]);
+
+  const RenderLoading = useCallback(() => {
+    return (
+      <>
+        <Loading />
+        <div className={ss.loadText}>Loading...</div>
+      </>
+    );
+  }, []);
 
   useEffect(() => {
     initRender().then();
@@ -229,7 +194,7 @@ export const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
     <>
       <div onClick={followUser}>
         {followBtn || (
-          <Button icon={<AddContactIcon />}>
+          <Button icon={<AddContactIcon />} disabled={isBtnLoad}>
             {targetUserAccount?.is_my_following ? 'Following' : 'Follow'}
           </Button>
         )}
@@ -245,14 +210,18 @@ export const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
       )}
       <Modal
         appType={appType}
+        dialogClassName={cx({
+          [ss.loadContainer]: modalType === 'loading'
+        })}
         visible={!!modalType}
         closeModal={() => {
           setModalType(undefined);
         }}
+        modalHeader={modalType === 'loading' ? <></> : undefined}
       >
         {modalType === 'success' && <RenderFollowSuccess />}
         {modalType === 'error' && <RenderErrorInfo />}
-        {modalType === 'loading' && <Loading />}
+        {modalType === 'loading' && <RenderLoading />}
       </Modal>
     </>
   );
