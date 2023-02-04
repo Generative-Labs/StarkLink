@@ -100,10 +100,9 @@ export const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
             did_type: myProfile.wallet_type as WalletType,
           });
           const newUser = await getUserInfo('web3mq', userInfo.userid);
-          console.log(newUser, 'newUser');
+          setTargetUserAccount(newUser);
           setIsBtnLoad(false);
           setModalType('success');
-          setTargetUserAccount(newUser);
         } catch (error) {
           setErrorInfo(error as string);
           setModalType('error');
