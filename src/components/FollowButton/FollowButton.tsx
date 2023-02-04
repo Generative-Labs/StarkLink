@@ -99,17 +99,21 @@ export const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
             action: 'follow',
             did_type: myProfile.wallet_type as WalletType,
           });
+          const newUser = await getUserInfo('web3mq', userInfo.userid);
+          console.log(newUser, 'newUser');
           setIsBtnLoad(false);
           setModalType('success');
+          setTargetUserAccount(newUser);
         } catch (error) {
+          setErrorInfo(error as string);
+          setModalType('error');
           setIsBtnLoad(false);
-          setModalType(undefined);
         }
       });
     }
   };
 
-  const getUserInfo = async (didType: WalletType, didValue: string) => {
+  const getUserInfo = async (didType: string, didValue: string) => {
     if (keys) {
       try {
         const web3MqInfo = await getUserPublicProfileRequest({

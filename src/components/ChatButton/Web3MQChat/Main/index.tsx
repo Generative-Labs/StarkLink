@@ -22,7 +22,7 @@ const Main = () => {
       <Channel className={cx({
         'hide': activeNotification
       })}>
-        <Window>
+        <Window hasContainer>
           <MessageHeader avatarSize={40} />
           <MessageList />
           <MessageConsole Input={<MessageInput Input={MsgInput} />} />
