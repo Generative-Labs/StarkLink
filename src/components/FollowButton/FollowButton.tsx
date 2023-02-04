@@ -9,6 +9,7 @@ import { RightIcon } from '../../icons/RightIcon';
 import { SkeletonIcon } from '../../icons/SkeletonIcon';
 import { getShortAddress } from '../../utils';
 import ss from './index.module.css';
+import type {UserAccountType} from "@web3mq/react-components/dist/components/LoginModal/hooks/useLogin";
 
 export type FollowButtonProps = {
   username?: string;
@@ -17,13 +18,6 @@ export type FollowButtonProps = {
   targetWalletType: WalletType;
   targetWalletAddress: string;
   followBtn?: React.ReactNode;
-};
-
-export type UserAccountType = {
-  userid: string;
-  address: string;
-  walletType: WalletType;
-  userExist: boolean;
 };
 
 export type ReadyStepType = 'follow';

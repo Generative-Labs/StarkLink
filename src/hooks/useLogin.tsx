@@ -70,9 +70,9 @@ const useLogin = () => {
         localStorage.setItem('PRIVATE_KEY', tempPrivateKey);
         localStorage.setItem('PUBLIC_KEY', tempPublicKey);
         localStorage.setItem('WALLET_ADDRESS', address);
-        localStorage.setItem(`MAIN_PRIVATE_KEY`, privateKey);
-        localStorage.setItem(`MAIN_PUBLIC_KEY`, publicKey);
-        localStorage.setItem(`DID_KEY`, didKey);
+        localStorage.setItem('MAIN_PRIVATE_KEY', privateKey);
+        localStorage.setItem('MAIN_PUBLIC_KEY', publicKey);
+        localStorage.setItem('DID_KEY', didKey);
         localStorage.setItem('PUBKEY_EXPIRED_TIMESTAMP', String(pubkeyExpiredTimestamp));
         setKeys({
           PrivateKey: tempPrivateKey,
@@ -84,8 +84,8 @@ const useLogin = () => {
       if (eventData.type === 'register') {
         const { privateKey, publicKey, address } = eventData.data;
         localStorage.setItem('WALLET_ADDRESS', address);
-        localStorage.setItem(`MAIN_PRIVATE_KEY`, privateKey);
-        localStorage.setItem(`MAIN_PUBLIC_KEY`, publicKey);
+        localStorage.setItem('MAIN_PRIVATE_KEY', privateKey);
+        localStorage.setItem('MAIN_PUBLIC_KEY', publicKey);
       }
     }
   };
