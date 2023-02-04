@@ -1,3 +1,24 @@
+.successContainer, .errorContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px;
+}
+.successWrap {
+    display:  flex;
+    align-items: center;
+    width: 100%;
+    margin-top: 16px;
+    display: 'flex',
+}
+.followContent {
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 22px;
+    color: #1AC057;
+}
 .pendContent {
     font-family: 'Inter', sans-serif;
     font-style: normal;
@@ -5,4 +26,60 @@
     font-size: 14px;
     line-height: 20px;
     color: #71717A;
+}
+.skeletonIcon {
+    padding: 8px 0;
+}
+.loadContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 148px;
+    height: 148px;
+}
+.loadContainer .loadText {
+    font-family: 'Inter' sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    color: #71717A;
+    margin-top: 16px;
+}
+
+.errorContainer .errorIcon svg{
+    width: 54px;
+    height: 54px;
+}
+.errorTitle, .sucesstitle {
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    color: rgba(0,0,0,.88);
+    font-size: 24px;
+    margin: 6px 0;
+}
+.errorDescription {
+    color: rgba(0,0,0,.45);
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+}
+.errorTip {
+    width: 100%;
+    background-color: rgba(0,0,0,.02);
+    padding: 16px;
+    color: rgba(0,0,0,.88);
+    word-break: break-word;
+    font-size: 14px;
+    line-height: 1.5714285714285714;
+    margin-top: 6px;
+}
+.errorTip > a {
+    color: #1677ff;
+    text-decoration: none;
+    outline: none;
+    cursor: pointer;
 }
