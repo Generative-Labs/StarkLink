@@ -37,7 +37,7 @@ export const ChatButton: FunctionComponent<ChatButtonProps> = (props) => {
     window.innerWidth <= 600 ? AppTypeEnum['h5'] : AppTypeEnum['pc'],
   );
   const [errorInfo, setErrorInfo] = useState('');
-  const { init, getAccount, handleLoginEvent, Client, keys, logout } = useLogin();
+  const { init, getAccount, handleLoginEvent, Client, keys, logout, mainKeys } = useLogin();
   const [readyStep, setReadyStep] = useState<string>();
   const [targetUserAccount, setTargetUserAccount] = useState<any>();
   const [modalType, setModalType] = useState<ChatModalType>();
@@ -136,7 +136,7 @@ export const ChatButton: FunctionComponent<ChatButtonProps> = (props) => {
   };
 
   const Web3MQChat = useCallback(() => {
-    if (!web3mqClient) {
+    if (!web3mqClient || !keys) {
       return null;
     }
 
@@ -166,13 +166,13 @@ export const ChatButton: FunctionComponent<ChatButtonProps> = (props) => {
           logout={logout}
           containerId="chat-content"
         >
-          <ConnectMessage />
+          {/* <ConnectMessage /> */}
           <DashBoard />
           <Main />
         </Chat>
       </div>
     );
-  }, [web3mqClient]);
+  }, [web3mqClient, keys]);
 
   useEffect(() => {
     initRender().then();
@@ -183,16 +183,18 @@ export const ChatButton: FunctionComponent<ChatButtonProps> = (props) => {
       <div onClick={handleChat}>{chatBtn || <Button icon={<AddContactIcon />}>Chat</Button>}</div>
       {showLogin && !keys && (
         <LoginModal
+          keys={mainKeys || undefined}
           client={Client}
           containerId={appType}
           handleLoginEvent={handleLoginEvent}
           isShow={true}
           account={account}
+          loginBtnNode={<></>}
         />
       )}
       <Modal
         style={{
-          display: !!modalType ? 'block' : 'none',
+          display: (!!modalType && keys) ? 'block' : 'none',
         }}
         appType={appType}
         visible={true}

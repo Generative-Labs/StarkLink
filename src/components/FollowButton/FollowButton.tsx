@@ -32,7 +32,7 @@ export const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
     window.innerWidth <= 600 ? AppTypeEnum['h5'] : AppTypeEnum['pc'],
   );
   const [errorInfo, setErrorInfo] = useState('');
-  const { init, getAccount, handleLoginEvent, Client, keys } = useLogin();
+  const { init, getAccount, handleLoginEvent, Client, keys, mainKeys } = useLogin();
   const [readyStep, setReadyStep] = useState<ReadyStepType>();
   const [targetUserAccount, setTargetUserAccount] = useState<any>();
   const [modalType, setModalType] = useState<ModalType>();
@@ -101,6 +101,12 @@ export const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
           });
           const newUser = await getUserInfo('web3mq', userInfo.userid);
           setTargetUserAccount(newUser);
+          await client.channel.updateChannels({
+            topic: userInfo.userid,
+            topic_type: 'user',
+            chatid: userInfo.userid,
+            chat_type: 'user',
+          });
           setIsBtnLoad(false);
           setModalType('success');
         } catch (error) {
@@ -204,11 +210,13 @@ export const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
       </div>
       {showLogin && !keys && (
         <LoginModal
+          keys={mainKeys || undefined}
           client={Client}
           containerId={appType}
           handleLoginEvent={handleLoginEvent}
           isShow={true}
           account={account}
+          loginBtnNode={<></>}
         />
       )}
       <Modal
