@@ -4,8 +4,8 @@ import {FollowButton, ChatButton} from '../../src';
 function App() {
     return (
         <div className='app_container'>
-            <FollowButton targetWalletAddress='0x7236b0F4F1409AFdC7C9fC446943A7b84b6513a1' targetWalletType='eth'/>
-            <ChatButton targetWalletAddress='0x7236b0F4F1409AFdC7C9fC446943A7b84b6513a1' targetWalletType='eth'/>
+            <FollowButton targetWalletAddress='0x63dc40a92a63da67bf635bd3c8288a719a029bde' targetWalletType='eth'/>
+            <ChatButton targetWalletAddress='0x63dc40a92a63da67bf635bd3c8288a719a029bde' targetWalletType='eth'/>
         </div>
     );
 }

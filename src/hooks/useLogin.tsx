@@ -8,6 +8,12 @@ type KeyPairsType = {
   address: string;
 };
 
+type MainKeyPairstype = {
+  publicKey: string 
+  privateKey: string;
+  walletAddress: string;
+}
+
 const useLogin = () => {
   const hasKeys = useMemo(() => {
     const PrivateKey = localStorage.getItem('PRIVATE_KEY') || '';
@@ -19,7 +25,17 @@ const useLogin = () => {
     }
     return null;
   }, []);
+  const hasMainKeys = useMemo(() => {
+    const privateKey = localStorage.getItem('MAIN_PRIVATE_KEY') || '';
+    const publicKey = localStorage.getItem('MAIN_PUBLIC_KEY') || '';
+    const walletAddress = localStorage.getItem('WALLET_ADDRESS') || '';
+    if (publicKey && privateKey && walletAddress) {
+      return { publicKey, privateKey, walletAddress };
+    }
+    return null;
+  }, []);
   const [keys, setKeys] = useState<KeyPairsType | null>(hasKeys);
+  const [mainKeys, setMainKeys] = useState<MainKeyPairstype | null>(hasMainKeys);
   const [fastestUrl, setFastUrl] = useState<string | null>(null);
 
   const init = async () => {
@@ -90,7 +106,7 @@ const useLogin = () => {
     }
   };
 
-  return { keys, fastestUrl, init, getAccount, logout, handleLoginEvent, Client };
+  return { mainKeys, keys, fastestUrl, init, getAccount, logout, handleLoginEvent, Client };
 };
 
 export default useLogin;
