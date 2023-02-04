@@ -4,7 +4,7 @@ import {FollowButton} from '../../src';
 function App() {
     return (
         <div className='app_container'>
-            <FollowButton targetWalletAddress='0x0D0e490E21ff5F3d3f6fEcEfd376D0e11a6b91110' targetWalletType='eth'/>
+            <FollowButton targetWalletAddress='0x7236b0F4F1409AFdC7C9fC446943A7b84b6513a1' targetWalletType='eth'/>
         </div>
     );
 }

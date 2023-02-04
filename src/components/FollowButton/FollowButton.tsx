@@ -164,7 +164,7 @@ export const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
   const initRender = async () => {
     if (keys) {
       if (!targetUserAccount) {
-        const userInfo = await getUserInfo(targetWalletType, targetWalletAddress);
+        const userInfo = await getUserInfo(targetWalletType, targetWalletAddress.toLowerCase());
         console.log(userInfo, 'userInfo');
         setTargetUserAccount(userInfo);
       }
@@ -207,7 +207,7 @@ export const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
             >
               Follow {getShortAddress(targetWalletAddress)}
             </div>
-            <div style={ss.pendContent}>
+            <div className={ss.pendContent}>
               Pending To: {keys && getShortAddress(keys.address)}
             </div>
           </div>
