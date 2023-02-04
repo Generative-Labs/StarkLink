@@ -16,6 +16,9 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "../src/components/icons/SuccessIcon.tsx", "../src/components/FollowButton.tsx"],
+  "include": ["src",
+    "../src/icons/SuccessIcon.tsx",
+    "../src/components/followButton1/FollowButton1.tsx"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

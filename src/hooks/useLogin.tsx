@@ -1,13 +1,21 @@
 import { useMemo, useState } from 'react';
-import { Client, KeyPairsType } from '@web3mq/client';
+import { Client } from '@web3mq/client';
+
+type KeyPairsType = {
+  PrivateKey: string;
+  PublicKey: string;
+  userid: string;
+  address: string;
+};
 
 const useLogin = () => {
   const hasKeys = useMemo(() => {
     const PrivateKey = localStorage.getItem('PRIVATE_KEY') || '';
     const PublicKey = localStorage.getItem('PUBLIC_KEY') || '';
     const userid = localStorage.getItem('userid') || '';
-    if (PrivateKey && PublicKey && userid) {
-      return { PrivateKey, PublicKey, userid };
+    const address = localStorage.getItem('WALLET_ADDRESS') || '';
+    if (PrivateKey && PublicKey && userid && address) {
+      return { PrivateKey, PublicKey, userid, address };
     }
     return null;
   }, []);
@@ -30,8 +38,6 @@ const useLogin = () => {
 
   const getAccount = async () => {
     const { address } = await Client.register.getAccount('starknet');
-    console.log('address', address);
-
     const { userid, userExist } = await Client.register.getUserInfo({
       did_value: address,
       did_type: 'starknet',
@@ -72,6 +78,7 @@ const useLogin = () => {
           PrivateKey: tempPrivateKey,
           PublicKey: tempPublicKey,
           userid,
+          address
         });
       }
       if (eventData.type === 'register') {
@@ -83,7 +90,7 @@ const useLogin = () => {
     }
   };
 
-  return { keys, fastestUrl, init, getAccount, logout, handleLoginEvent };
+  return { keys, fastestUrl, init, getAccount, logout, handleLoginEvent, Client };
 };
 
 export default useLogin;
