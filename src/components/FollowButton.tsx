@@ -5,17 +5,50 @@ import '@web3mq/react-components/dist/css/index.css';
 import { AddContactIcon } from './icons/AddContactIcon';
 import { SuccessIcon } from './icons/SuccessIcon';
 import { SkeletonIcon } from './icons/SkeletonIcon';
-import { UserAccountType } from '@web3mq/react-components/dist/components/LoginModal/hooks/useLogin';
+// import { UserAccountType } from '@web3mq/react-components/dist/components/LoginModal/hooks/useLogin';
 import { Client, getUserPublicProfileRequest } from '@web3mq/client';
-import './FollowButton.css';
+// import './FollowButton.css';
 import { RightIcon } from './icons/RightIcon';
-import Right from './Right.jpg';
+
 export type FollowButtonProps = {
   username?: string;
   userid?: string;
   btnText?: string;
   address: string;
   walletType: string;
+};
+const styles = {
+  successContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: '24px',
+  },
+  successWrap: {
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+    marginTop: '16px',
+  },
+  followContent: {
+    fontFamily: "'Inter', sans-serif",
+    fontWeight: '600',
+    fontSize: '18px',
+    lineHeight: '22px',
+    textAlign: 'center',
+    color: '#1AC057',
+  },
+  pendContent: {
+    fontFamily: `'Inter', sans-serif`,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    fontSize: '14px',
+    lineHeight: '20px',
+    color: '#71717A',
+  },
+  skeletonIcon: {
+    padding: '8px 0',
+  },
 };
 const getShortAddress = (address = '', num = 5, endNum = 4) => {
   const strLength = address.length;
@@ -24,11 +57,11 @@ const getShortAddress = (address = '', num = 5, endNum = 4) => {
 const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
   const { address, walletType } = props;
   const [isLoading, setIsLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(true);
   const [loginAccount, setLoginAccount] = useState<any>(null);
   const [account, setAccount] = useState<any>(null);
   const [appType, setAppType] = useState(window.innerWidth <= 600 ? AppTypeEnum['h5'] : AppTypeEnum['pc']);
-  const { fastestUrl, keys, init, getAccount, handleLoginEvent } = useLogin();
+  const { fastestUrl, keys, init, handleLoginEvent } = useLogin();
 
   const handleAppType = () => {
     setAppType(window.innerWidth <= 600 ? AppTypeEnum['h5'] : AppTypeEnum['pc']);
@@ -126,18 +159,36 @@ const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
           setShowModal(false);
         }}
       >
-        <div className='successContainer'>
-          <SuccessIcon className='successIcon' />
-          <div className='successWrap'>
-            <img src={Right} alt='' />
-            <div className='successUserInfo'>
-              <div className='followContent'>Follow {account && getShortAddress(account.userid)}</div>
-              <div className='pendContent'>Pending To: {account && getShortAddress(account.wallet_address)}</div>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            padding: '24px',
+          }}
+        >
+          <SuccessIcon />
+          <div style={styles.successWrap}>
+            <RightIcon />
+            <div style={{ marginLeft: '16px' }}>
+              <div
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: '600',
+                  fontSize: '18px',
+                  lineHeight: '22px',
+                  textAlign: 'center',
+                  color: '#1AC057',
+                }}
+              >
+                Follow {account && getShortAddress(account.userid)}
+              </div>
+              <div style={styles.pendContent}>Pending To: {account && getShortAddress(account.wallet_address)}</div>
             </div>
           </div>
-          <SkeletonIcon className='skeletonIcon' />
-          <SkeletonIcon className='skeletonIcon' />
-          <SkeletonIcon className='skeletonIcon' />
+          <SkeletonIcon style={styles.skeletonIcon} />
+          <SkeletonIcon style={styles.skeletonIcon} />
+          <SkeletonIcon style={styles.skeletonIcon} />
         </div>
       </Modal>
     </>

@@ -1,6 +1,6 @@
 import React from 'react';
-// import { FollowButton } from '../../dist/esm/index';
-import FollowButton from '../../src/components/FollowButton';
+import { FollowButton } from '../../dist/esm/index';
+// import FollowButton from '../../src/components/FollowButton';
 function App() {
   return (
     <div className='app_container'>

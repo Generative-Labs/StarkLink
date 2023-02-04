@@ -1,2 +1,2 @@
-import FollowButton from '../example/src/components/FollowButton';
+import FollowButton from './components/FollowButton';
 export { FollowButton };
