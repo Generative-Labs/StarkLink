@@ -1,8 +1,9 @@
 {
   "name": "starklink",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "",
   "main": "dist/index.js",
+  "repository": "https://github.com/Generative-Labs/StarkLink",
   "license": "MIT",
   "files": [
     "dist",
@@ -42,7 +43,7 @@
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
     "@typescript-eslint/parser": "^5.13.0",
-    "@web3mq/client": "^1.0.6",
+    "@web3mq/client": "^1.0.9",
     "classnames": "^2.3.1",
     "eslint": "^7.11.0",
     "husky": "3.0.9",

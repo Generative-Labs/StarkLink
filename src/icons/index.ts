@@ -4,4 +4,5 @@ export * from './WarningIcon';
 export * from './RightIcon';
 export * from './SkeletonIcon';
 export * from './SuccessIcon';
+export * from './ErrorIcon';
 

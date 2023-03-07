@@ -3,12 +3,8 @@ import { AppTypeEnum, LoginModal, Button, Modal, Loading, Popover } from '@web3m
 import cx from 'classnames';
 import useLogin from '../../hooks/useLogin';
 import '@web3mq/react-components/dist/css/index.css';
-import { AddContactIcon } from '../../icons/AddContactIcon';
+import { AddContactIcon, SuccessIcon, RightIcon, ErrorIcon } from '../../icons';
 import { getUserPublicProfileRequest, WalletType } from '@web3mq/client';
-import { ErrorIcon } from '../../icons/ErrorIcon';
-import { SuccessIcon } from '../../icons/SuccessIcon';
-import { RightIcon } from '../../icons/RightIcon';
-import { SkeletonIcon } from '../../icons/SkeletonIcon';
 import { getShortAddress } from '../../utils';
 import ss from './index.module.css';
 import type {UserAccountType} from "@web3mq/react-components/dist/components/LoginModal/hooks/useLogin";
@@ -92,20 +88,21 @@ export const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
       }).then(async function (client: any) {
         const myProfile = await client.user.getMyProfile();
         //todo follow func
+        console.log(myProfile, 'myProfile')
         try {
           const followRes = await client.contact.followOperation({
-            target_userid: userInfo.userid,
+            targetUserid: userInfo.userid,
             address: myProfile.wallet_address,
             action: 'follow',
-            did_type: myProfile.wallet_type as WalletType,
+            didType: myProfile.wallet_type as WalletType,
           });
           const newUser = await getUserInfo('web3mq', userInfo.userid);
           setTargetUserAccount(newUser);
           await client.channel.updateChannels({
             topic: userInfo.userid,
-            topic_type: 'user',
+            topicType: 'user',
             chatid: userInfo.userid,
-            chat_type: 'user',
+            chatType: 'user',
           });
           setIsBtnLoad(false);
           setModalType('success');
