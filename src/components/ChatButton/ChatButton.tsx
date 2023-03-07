@@ -11,7 +11,7 @@ import {
 } from '@web3mq/react-components';
 import useLogin from '../../hooks/useLogin';
 import '@web3mq/react-components/dist/css/index.css';
-import { AddContactIcon } from '../../icons/AddContactIcon';
+import { AddContactIcon, ErrorIcon } from '../../icons';
 import { getUserPublicProfileRequest, WalletType } from '@web3mq/client';
 import ss from './index.module.css';
 import cx from 'classnames';
@@ -130,6 +130,7 @@ export const ChatButton: FunctionComponent<ChatButtonProps> = (props) => {
         setTargetUserAccount(userInfo);
       }
       if (readyStep === 'chat') {
+        console.log('??');
         await handleChat();
       }
     }
@@ -174,6 +175,20 @@ export const ChatButton: FunctionComponent<ChatButtonProps> = (props) => {
     );
   }, [web3mqClient, keys]);
 
+  const RenderErrorInfo = useCallback(() => {
+    return (
+      <div className={ss.errorContainer}>
+        <ErrorIcon className={ss.errorIcon} />
+        {/* <div className={ss.errorTitle}>Follow Failed</div> */}
+        <div className={ss.errorTitle}>{errorInfo}</div>
+        <div className={ss.errorTip}>
+          Share the link to your invited users. &nbsp;
+          <a href='https://web3-mq-react-example.pages.dev/' target='_blank'>Invite Now &gt;</a>
+        </div>
+      </div>
+    );
+  }, [errorInfo]);
+
   useEffect(() => {
     initRender().then();
   }, [keys]);
@@ -204,6 +219,7 @@ export const ChatButton: FunctionComponent<ChatButtonProps> = (props) => {
       >
         <Web3MQChat />
         {modalType === 'loading' && <Loading />}
+        {modalType === 'error' && <RenderErrorInfo />}
       </Modal>
     </>
   );
