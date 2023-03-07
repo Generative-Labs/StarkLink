@@ -1,27 +1,76 @@
-# web3-mq-react
+# Intro
 
-A react ui components for wbe3mq
+> A library of react components for Follow or chat on Web3MQ
 
-# Getting Started
+## Feature
 
-In the project directory. first, install the dependencies, you can run:
+- Follow Button
+- Chat Button
 
-```bash
-yarn 
-```
-Second, package the project:
+## Install
 
 ```bash
-yarn build
+npm i starklink
 ```
 
-Go to the `expamle` folder and  run the development server:
+or
 
+```bash
+yarn add starklink
 ```
-cd example
-npm i
-npm run dev
-```
-# docs
 
-https://docs.web3mq.com/docs/Web3MQ-UI-Components/Web3MQ-React/Intro
+## Usage
+
+# FollowButton
+
+```tsx
+import React from 'react';
+import {FollowButton, ChatButton} from 'starklink';
+
+function App() {
+    return (
+        <div className='app_container'>
+            <FollowButton targetWalletAddress='0x63dc40a92a63da67bf635bd3c8288a719a029bde' targetWalletType='eth'/>
+        </div>
+    );
+}
+
+export default App;
+```
+
+# ChatButton
+
+```tsx
+import React from 'react';
+import {FollowButton, ChatButton} from 'starklink';
+
+function App() {
+    return (
+        <div className='app_container'>
+            <ChatButton targetWalletAddress='0x63dc40a92a63da67bf635bd3c8288a719a029bde' targetWalletType='eth'/>
+        </div>
+    );
+}
+
+export default App;
+```
+
+## Api
+
+### ChatButton
+
+**The properties of the ChatButton are described as follows:**
+
+| Property            | Description    | Type                                                                                       | Default | required |
+|---------------------|----------------|--------------------------------------------------------------------------------------------|---------|----------|
+| targetWalletAddress | wallet address | [Wallet Address](https://docs.web3mq.com/docs/Web3MQ-SDK/JS-SDK/standards/#wallet-address) | -       | true     |
+| targetWalletType    | wallet type    | [WalletType](https://docs.web3mq.com/docs/Web3MQ-SDK/JS-SDK/types/#wallettype)             | -       | true     |
+
+### FollowButton
+
+**The properties of the FollowButton are described as follows:**
+
+| Property         | Description                                                             |                                                Type                                                 | Default           | required |
+| ---------------- | ----------------------------------------------------------------------- |:---------------------------------------------------------------------------------------------------:| ----------------- | -------- |
+| targetWalletAddress          | wallet address                                                        | [Wallet Address](https://docs.web3mq.com/docs/Web3MQ-SDK/JS-SDK/standards/#wallet-address) | -         |  true   |
+| targetWalletType          | wallet type     |    [WalletType](https://docs.web3mq.com/docs/Web3MQ-SDK/JS-SDK/types/#wallettype)    | -|  true   |
