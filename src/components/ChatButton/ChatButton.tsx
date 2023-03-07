@@ -11,8 +11,8 @@ import {
 } from '@web3mq/react-components';
 import useLogin from '../../hooks/useLogin';
 import '@web3mq/react-components/dist/css/index.css';
-import { AddContactIcon } from '../../icons/AddContactIcon';
-import { getUserPublicProfileRequest, WalletType } from '@web3mq/client';
+import { AddContactIcon, ErrorIcon } from '../../icons';
+import { getUserPublicProfileRequest, WalletType, getUserInfoRequest } from '@web3mq/client';
 import ss from './index.module.css';
 import cx from 'classnames';
 import Main from './Web3MQChat/Main';
@@ -68,29 +68,17 @@ export const ChatButton: FunctionComponent<ChatButtonProps> = (props) => {
       setShowLogin(true);
       return;
     }
-    let userInfo = {
-      userid: targetUserAccount ? targetUserAccount.userid : '',
-      userExist: !!targetUserAccount,
-    };
-    if (!targetUserAccount) {
-      userInfo = await Client.register.getUserInfo({
-        did_value: targetWalletAddress,
+    // let userInfo = {
+    //   userid: targetUserAccount ? targetUserAccount.userid : '',
+    //   userExist: !!targetUserAccount,
+    // };
+    try {
+      await getUserInfoRequest({
         did_type: targetWalletType,
+        did_value: targetWalletAddress,
+        timestamp: Date.now(),
       });
-    }
-    // follow
-    if (!userInfo.userExist) {
-      setErrorInfo('user not register');
-      setModalType('error');
-    } else {
       setModalType('loading');
-      // const activeChannel = {
-      //   avatar_base64: '',
-      //   avatar_url: '',
-      //   chat_name: userInfo.userid,
-      //   chat_type: 'user',
-      //   chatid: userInfo.userid,
-      // };
       if (!web3mqClient) {
         console.log('set client');
         new Promise(function (resolve) {
@@ -103,6 +91,9 @@ export const ChatButton: FunctionComponent<ChatButtonProps> = (props) => {
       } else {
         setModalType('success');
       }
+    } catch (error) {
+      setErrorInfo('user not register');
+      setModalType('error');
     }
   };
 
@@ -130,6 +121,7 @@ export const ChatButton: FunctionComponent<ChatButtonProps> = (props) => {
         setTargetUserAccount(userInfo);
       }
       if (readyStep === 'chat') {
+        console.log('??');
         await handleChat();
       }
     }
@@ -174,6 +166,20 @@ export const ChatButton: FunctionComponent<ChatButtonProps> = (props) => {
     );
   }, [web3mqClient, keys]);
 
+  const RenderErrorInfo = useCallback(() => {
+    return (
+      <div className={ss.errorContainer}>
+        <ErrorIcon className={ss.errorIcon} />
+        {/* <div className={ss.errorTitle}>Follow Failed</div> */}
+        <div className={ss.errorTitle}>{errorInfo}</div>
+        <div className={ss.errorTip}>
+          Share the link to your invited users. &nbsp;
+          <a href='https://web3-mq-react-example.pages.dev/' target='_blank'>Invite Now &gt;</a>
+        </div>
+      </div>
+    );
+  }, [errorInfo]);
+
   useEffect(() => {
     initRender().then();
   }, [keys]);
@@ -204,6 +210,7 @@ export const ChatButton: FunctionComponent<ChatButtonProps> = (props) => {
       >
         <Web3MQChat />
         {modalType === 'loading' && <Loading />}
+        {modalType === 'error' && <RenderErrorInfo />}
       </Modal>
     </>
   );

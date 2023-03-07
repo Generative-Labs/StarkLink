@@ -4,7 +4,7 @@ import cx from 'classnames';
 import useLogin from '../../hooks/useLogin';
 import '@web3mq/react-components/dist/css/index.css';
 import { AddContactIcon, SuccessIcon, RightIcon, ErrorIcon } from '../../icons';
-import { getUserPublicProfileRequest, WalletType } from '@web3mq/client';
+import { getUserPublicProfileRequest, WalletType, getUserInfoRequest } from '@web3mq/client';
 import { getShortAddress } from '../../utils';
 import ss from './index.module.css';
 import type {UserAccountType} from "@web3mq/react-components/dist/components/LoginModal/hooks/useLogin";
@@ -65,22 +65,13 @@ export const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
       setShowLogin(true);
       return;
     }
-    let userInfo = {
-      userid: targetUserAccount ? targetUserAccount.userid : '',
-      userExist: !!targetUserAccount,
-    };
-    if (!targetUserAccount) {
-      userInfo = await Client.register.getUserInfo({
-        did_value: targetWalletAddress,
-        did_type: targetWalletType,
-      });
-    }
     // follow
-    if (!userInfo.userExist) {
-      setErrorInfo('user not register');
-      setIsBtnLoad(false);
-      setModalType('error');
-    } else {
+    try {
+      const { data } = await getUserInfoRequest({
+        did_type: targetWalletType,
+        did_value: targetWalletAddress,
+        timestamp: Date.now(),
+      });
       setModalType('loading');
       new Promise(function (resolve) {
         const client = Client.getInstance(keys);
@@ -88,20 +79,19 @@ export const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
       }).then(async function (client: any) {
         const myProfile = await client.user.getMyProfile();
         //todo follow func
-        console.log(myProfile, 'myProfile')
         try {
           const followRes = await client.contact.followOperation({
-            targetUserid: userInfo.userid,
+            targetUserid: data.userid,
             address: myProfile.wallet_address,
             action: 'follow',
             didType: myProfile.wallet_type as WalletType,
           });
-          const newUser = await getUserInfo('web3mq', userInfo.userid);
+          const newUser = await getUserInfo('web3mq', data.userid);
           setTargetUserAccount(newUser);
           await client.channel.updateChannels({
-            topic: userInfo.userid,
+            topic: data.userid,
             topicType: 'user',
-            chatid: userInfo.userid,
+            chatid: data.userid,
             chatType: 'user',
           });
           setIsBtnLoad(false);
@@ -112,6 +102,10 @@ export const FollowButton: FunctionComponent<FollowButtonProps> = (props) => {
           setIsBtnLoad(false);
         }
       });
+    } catch (error) {
+      setErrorInfo('user not register');
+      setIsBtnLoad(false);
+      setModalType('error');
     }
   };
 
